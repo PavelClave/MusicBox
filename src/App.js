@@ -696,18 +696,18 @@ export default function App() {
         </div>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px 16px 40px" }}>
           {AUDIO_LECTURES.map(lec => (
-            <a key={lec.id} href={`https://drive.google.com/file/d/${lec.fileId}/view`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <div style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 12, display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", cursor: "pointer", transition: "all 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = "#667eea"}
-                onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}>
-                <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, flexShrink: 0 }}>🎧</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
-                  <div style={{ fontSize: 12, color: "#7B9E9C", marginTop: 2 }}>Аудио файл — Google Drive</div>
-                </div>
-                <div style={{ color: "#667eea" }}><DownloadIcon /></div>
-              </div>
-            </a>
+            <div key={lec.id} style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 20, flexShrink: 0 }}>🎧</div>
+    <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
+  </div>
+  <iframe
+    src={`https://drive.google.com/file/d/${lec.fileId}/preview`}
+    width="100%" height="80"
+    allow="autoplay"
+    style={{ border: "none", borderRadius: 12, background: "#f5f5f5" }}
+  />
+</div>
           ))}
         </div>
       </div>
