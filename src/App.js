@@ -742,13 +742,25 @@ export default function App() {
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84", marginBottom: 10 }}>Материали</div>
               {selectedWeek.materials.map(mat => (
-                <a key={mat.id} href={mat.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-                  <div className="material-item" style={{ background: "#fff", borderRadius: 14, padding: "14px 18px", marginBottom: 8, display: "flex", alignItems: "center", gap: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", border: "2px solid #E8F5F4", cursor: "pointer", transition: "all 0.2s" }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #FF8B94, #FFB347)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0, fontSize: 18 }}>{matIcon(mat.type)}</div>
-                    <div style={{ flex: 1 }}><div style={{ fontWeight: 800, color: "#2D5252", fontSize: 14 }}>{mat.title}</div><div style={{ fontSize: 12, color: "#7B9E9C" }}>{mat.type === "pdf" ? "PDF файл" : "JPG файл"}</div></div>
-                    <div style={{ color: "#4ECDC4" }}><DownloadIcon /></div>
-                  </div>
-                </a>
+               <div key={mat.id} className="material-item"
+  style={{ background: "#fff", borderRadius: 14, padding: "14px 18px", marginBottom: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", border: "2px solid #E8F5F4" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: mat.type === "pdf" ? 12 : 0, cursor: mat.type === "pdf" ? "default" : "pointer" }}
+    onClick={() => mat.type !== "pdf" && window.open(mat.url, "_blank")}>
+    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #FF8B94, #FFB347)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0, fontSize: 18 }}>{mat.type === "pdf" ? "📄" : "🖼️"}</div>
+    <div style={{ flex: 1 }}>
+      <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 14 }}>{mat.title}</div>
+      <div style={{ fontSize: 12, color: "#7B9E9C" }}>{mat.type === "pdf" ? "PDF файл" : "JPG — кликни за отваряне"}</div>
+    </div>
+    {mat.type !== "pdf" && <div style={{ color: "#4ECDC4" }}><DownloadIcon /></div>}
+  </div>
+  {mat.type === "pdf" && (
+    <iframe
+      src={`https://drive.google.com/file/d/${mat.url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1]}/preview`}
+      width="100%" height="500"
+      style={{ border: "none", borderRadius: 10 }}
+    />
+  )}
+</div>
               ))}
             </div>
           )}
