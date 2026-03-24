@@ -1018,12 +1018,23 @@ export default function App() {
                             </div>
                           </div>
                           {profile?.is_admin && (
-                            <div style={{ display: "flex", gap: 6, marginLeft: 12 }}>
-                              <button onClick={(e) => { e.stopPropagation(); pinThread(thread); }}
-                                style={{ background: thread.pinned ? "#FFF3CD" : "#EEF8F7", border: "none", borderRadius: 8, padding: "5px 10px", color: thread.pinned ? "#CC8800" : "#4ECDC4", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
-                                <PinIcon /> {thread.pinned ? "Откачи" : "Закачи"}
-                              </button>
-                            </div>
+                           <div style={{ display: "flex", gap: 6, marginLeft: 12 }}>
+  <button onClick={(e) => { e.stopPropagation(); pinThread(thread); }}
+    style={{ background: thread.pinned ? "#FFF3CD" : "#EEF8F7", border: "none", borderRadius: 8, padding: "5px 10px", color: thread.pinned ? "#CC8800" : "#4ECDC4", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
+    <PinIcon /> {thread.pinned ? "Откачи" : "Закачи"}
+  </button>
+  {(profile?.is_admin || thread.user_id === session?.user?.id) && (
+    <button onClick={(e) => { e.stopPropagation(); deleteThread(thread.id); }}
+      style={{ background: "#FFE8E8", border: "none", borderRadius: 8, padding: "5px 10px", color: "#CC4444", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
+      <TrashIcon /> Изтрий
+    </button>
+  )}
+</div>
+```
+
+После трябва да добавиш и `deleteThread` функцията. Намери с **Cmd+F**:
+```
+const pinThread = async
                           )}
                         </div>
                       </div>
