@@ -412,7 +412,14 @@ export default function App() {
       else setFreeComments(prev => prev.map(c => c.id === comment.id ? { ...c, pinned: !c.pinned } : c));
     } catch (_) {}
   };
-
+const deleteThread = async (id) => {
+  if (!window.confirm("Изтрий темата?")) return;
+  try {
+    await sb(`comments?thread_id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token);
+    await sb(`threads?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token);
+    setThreads(prev => prev.filter(t => t.id !== id));
+  } catch (_) {}
+};
   const pinThread = async (thread) => {
     try {
       await sb(`threads?id=eq.${thread.id}`, { method: "PATCH", prefer: "return=minimal", body: JSON.stringify({ pinned: !thread.pinned }) }, token);
