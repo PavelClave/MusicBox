@@ -188,20 +188,15 @@ const DriveVideo = ({ fileId, title }) => (
   <div className="drive-wrap">
     <iframe
       width="100%" height="100%"
-      src={`https://drive.google.com/file/d/${fileId}/preview`}
+      src={`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`}
       title={title}
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
       style={{ display: "block", width: "100%", height: "100%" }}
     />
-    {/* Скрива бутона за отваряне в нов таб — горен десен ъгъл */}
-    <div className="drive-overlay" />
-    {/* Скрива долната лента с опции */}
-    <div className="drive-overlay-bottom" />
   </div>
 );
-
 export default function App() {
   // ── Auth state ──
   const [authMode, setAuthMode] = useState("login");
