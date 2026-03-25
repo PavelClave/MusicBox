@@ -1057,7 +1057,7 @@ const pinThread = async
             <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>🛡️ Администраторски панел</div>
             <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 24, fontWeight: 600 }}>Управление на потребители</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 24, background: "#EEF8F7", borderRadius: 12, padding: 4, width: "fit-content" }}>
-              `\u23F3 Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}``], ["users", "👥 Всички"], ["invite", "✉️ Покани"]].map(([key, label]) => (
+              `⏳ Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}``], ["users", "👥 Всички"], ["invite", "✉️ Покани"]].map(([key, label]) => (
                 <button key={key} onClick={() => setAdminTab(key)} style={{ padding: "8px 18px", border: "none", borderRadius: 10, background: adminTab === key ? "#fff" : "transparent", color: adminTab === key ? "#2D8B84" : "#7B9E9C", fontWeight: 900, fontSize: 13, boxShadow: adminTab === key ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>{label}</button>
               ))}
             </div>
