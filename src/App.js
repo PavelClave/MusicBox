@@ -83,12 +83,12 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: "m5p", title: "Презентация с дейности", type: "pdf", url: "https://drive.google.com/file/d/1B9m2H2IeNTwdv4cIOB0CTzu2ozkjSRPi/view" },
     ],
     videos: [
-      { id: 26, title: "Говор", embedId: "17_iqeGPokVlpzeDKGfN5wECaQQaZQz4_", type: "drive" },
-      { id: 27, title: "Говор и китара", embedId: "14BGtMtSJFb0IYJPyHCIApHUROOXFnIRm", type: "drive" },
-      { id: 28, title: "Пеене", embedId: "1mDh2gpzz8d15lqoNA5GgyvbiEadZ56BF", type: "drive" },
-      { id: 29, title: "Пеене с китара", embedId: "1VZwDFEy8i-ZcAVMbH6kv_5rHlaVb5pj7", type: "drive" },
-      { id: 30, title: "Ритъм 1", embedId: "1FcUNLiFYxWqhW6lfLopxtFapKAnx7Kfv", type: "drive" },
-      { id: 31, title: "Ритъм 2", embedId: "1GXjCgzyG9AvE43eceRpfqx11RLOB0fqb", type: "drive" },
+      { id: 26, title: "Говор", embedId: "1ZKw2wSPkyMojdPjfkOh9fuJRVjFvKVtJ", type: "drive" },
+      { id: 27, title: "Говор и китара", embedId: "1eeAf_GRTxbwDdYDuX4-bTl2n5XdqXscQ", type: "drive" },
+      { id: 28, title: "Пеене", embedId: "1KkvmUTGM0OPb_trg0nEJpqYd6PKjmLlO", type: "drive" },
+      { id: 29, title: "Пеене с китара", embedId: "144j7F65drYtw-NIvR_FQodneb_FXMylE", type: "drive" },
+      { id: 30, title: "Ритъм 1", embedId: "1nX6GgtsbUNjDjTzDUpYX2xbSxH-DO51X", type: "drive" },
+      { id: 31, title: "Ритъм 2", embedId: "1Ktw_Xw9SpYbBV26czzaAehvMdEQuI9k1", type: "drive" },
     ]},
   { id: 6, title: "Седмица 6", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
   { id: 7, title: "Седмица 7", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
@@ -199,20 +199,20 @@ const DriveVideo = ({ fileId, title }) => (
       position: "absolute",
       top: 0,
       right: 0,
-      width: 56,
-      height: 56,
-      borderRadius: "0 0 0 50%",
+      width: 90,
+      height: 90,
+      borderRadius: "0 0 0 60%",
       background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
       overflow: "hidden",
       zIndex: 10,
       cursor: "default",
       opacity: 1,
-      boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+      boxShadow: "0 2px 12px rgba(0,0,0,0.25)"
     }}>
       <img
         src={`data:image/png;base64,${LOGO_B64}`}
         alt=""
-        style={{ width: "110%", height: "110%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -2 }}
+        style={{ width: "115%", height: "115%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -3 }}
       />
     </div>
   </div>
@@ -922,16 +922,41 @@ export default function App() {
         </div>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px 16px 40px" }}>
           {AUDIO_LECTURES.map(lec => (
-            <a key={lec.id} href={`https://drive.google.com/file/d/${lec.fileId}/view`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <div style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 12, display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", cursor: "pointer" }}>
-                <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, flexShrink: 0 }}>🎧</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
-                  <div style={{ fontSize: 12, color: "#7B9E9C", marginTop: 2 }}>Аудио файл — Google Drive</div>
-                </div>
-                <div style={{ color: "#667eea" }}><DownloadIcon /></div>
+            <div key={lec.id} style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid #E8EAF6" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+                <div style={{ width: 46, height: 46, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 20, flexShrink: 0 }}>🎧</div>
+                <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
               </div>
-            </a>
+              <div style={{ position: "relative", borderRadius: 10, overflow: "hidden" }}>
+                <iframe
+                  src={`https://drive.google.com/file/d/${lec.fileId}/preview`}
+                  width="100%"
+                  height="200"
+                  frameBorder="0"
+                  allow="autoplay"
+                  style={{ display: "block", border: "none" }}
+                />
+                <div style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  width: 90,
+                  height: 90,
+                  borderRadius: "0 0 0 60%",
+                  background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
+                  overflow: "hidden",
+                  zIndex: 10,
+                  cursor: "default",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.25)"
+                }}>
+                  <img
+                    src={`data:image/png;base64,${LOGO_B64}`}
+                    alt=""
+                    style={{ width: "115%", height: "115%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -3 }}
+                  />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
