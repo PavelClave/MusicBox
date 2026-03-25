@@ -154,7 +154,7 @@ const css = `
   .fade-in { animation: fadeIn 0.4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .drive-wrap { position: relative; width: 100%; height: 100%; }
-  .drive-overlay { position: absolute; top: 0; right: 0; width: 60px; height: 60px; z-index: 10; background: transparent; cursor: default; }
+  .drive-overlay { position: absolute; top: 0; right: 0; width: 60px; height: 60px; z-index: 10; background: #000; cursor: default; }
   .drive-overlay-bottom { position: absolute; bottom: 0; right: 0; width: 100%; height: 44px; z-index: 10; background: transparent; cursor: default; }
 `;
 
