@@ -1039,7 +1039,6 @@ const deleteThread = async (id) => {
 </div>
 ```
 
-```
 const pinThread = async
                           )}
                         </div>
