@@ -1054,7 +1054,7 @@ const pinThread = async
         {/* ── ADMIN ── */}
         {activeTab === "admin" && profile?.is_admin && (
           <div>
-            <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>🛡️ Администраторски панел</div>
+            <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}> Администраторски панел</div>
             <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 24, fontWeight: 600 }}>Управление на потребители</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 24, background: "#EEF8F7", borderRadius: 12, padding: 4, width: "fit-content" }}>
               `Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}``], ["users", "👥 Всички"], ["invite", "✉️ Покани"]].map(([key, label]) => (
@@ -1066,7 +1066,7 @@ const pinThread = async
               <div style={{ background: "#fff", borderRadius: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", overflow: "hidden" }}>
                 <div style={{ padding: "16px 20px", borderBottom: "2px solid #EEF8F7", fontWeight: 900, fontSize: 16, color: "#2D8B84" }}>Чакащи одобрение</div>
                 {adminLoading ? <div style={{ textAlign: "center", padding: "40px" }}><Spinner size={40} /></div>
-                  : pendingUsers.length === 0 ? <div style={{ textAlign: "center", padding: "40px", color: "#AAC4C3", fontWeight: 700 }}>Няма чакащи потребители ✅</div>
+                  : pendingUsers.length === 0 ? <div style={{ textAlign: "center", padding: "40px", color: "#AAC4C3", fontWeight: 700 }}>Няма чакащи потребители </div>
                   : pendingUsers.map((u, i) => (
                     <div key={u.id} className="admin-row" style={{ padding: "14px 20px", borderBottom: i < pendingUsers.length - 1 ? "1px solid #EEF8F7" : "none", display: "flex", alignItems: "center", gap: 14 }}>
                       <Avatar profile={u} size={42} />
