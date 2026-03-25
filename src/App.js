@@ -188,13 +188,33 @@ const DriveVideo = ({ fileId, title }) => (
   <div className="drive-wrap">
     <iframe
       width="100%" height="100%"
-      src={`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`}
+      src={`https://drive.google.com/file/d/${fileId}/preview`}
       title={title}
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
       style={{ display: "block", width: "100%", height: "100%" }}
     />
+    <div style={{
+      position: "absolute",
+      top: 8,
+      right: 8,
+      width: 48,
+      height: 48,
+      borderRadius: "50%",
+      background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
+      overflow: "hidden",
+      zIndex: 10,
+      cursor: "default",
+      opacity: 0.85,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+    }}>
+      <img
+        src={`data:image/png;base64,${LOGO_B64}`}
+        alt=""
+        style={{ width: "110%", height: "110%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -2 }}
+      />
+    </div>
   </div>
 );
 export default function App() {
