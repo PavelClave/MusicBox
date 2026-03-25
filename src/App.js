@@ -515,7 +515,7 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error_description || data.msg || "Грешка");
       await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: data.id, email: addUserEmail.trim().toLowerCase(), name: addUserName.trim(), is_admin: addUserIsAdmin, approved: true }) }, token);
-      setAddUserMsg({ type: "success", text: `✅ Покана изпратена до ${addUserEmail}` });
+      setAddUserMsg({ type: "success", text: "Покана изпратена до " + addUserEmail });
       setAddUserEmail(""); setAddUserName(""); setAddUserIsAdmin(false); loadUsers();
     } catch (e) { setAddUserMsg({ type: "error", text: e.message || "Грешка при покана." }); }
     finally { setAddUserLoading(false); }
@@ -1151,13 +1151,13 @@ export default function App() {
           </div>
         )}
 
-        {/* ── ADMIN ── */
+        {/* ADMIN */}
         {activeTab === "admin" && profile?.is_admin && (
           <div>
             <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>Администраторски панел</div>
             <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 24, fontWeight: 600 }}>Управление на потребители</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 24, background: "#EEF8F7", borderRadius: 12, padding: 4, width: "fit-content" }}>
-              {[["pending", `⏳ Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}`], ["users", "👥 Всички"], ["invite", "✉️ Покани"]].map(([key, label]) => (
+              {[["pending", "Чакащи" + (pendingUsers.length > 0 ? " (" + pendingUsers.length + ")" : "")], ["users", "Всички"], ["invite", "Покани"]].map(([key, label]) => (
                 <button key={key} onClick={() => setAdminTab(key)} style={{ padding: "8px 18px", border: "none", borderRadius: 10, background: adminTab === key ? "#fff" : "transparent", color: adminTab === key ? "#2D8B84" : "#7B9E9C", fontWeight: 900, fontSize: 13, boxShadow: adminTab === key ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>{label}</button>
               ))}
             </div>
