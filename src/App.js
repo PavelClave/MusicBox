@@ -97,18 +97,18 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 24, title: "Говор и китара", embedId: "1br_Zp-ZW_mLTR-jPj8veaPwfAI0SicHD", type: "drive" },
       { id: 25, title: "Пеене", embedId: "1ORx8e9Nw57_viewdlb0AtiGyEI7rrljr", type: "drive" },
     ]},
- { id: 5, title: "Седмица 5", subtitle: "Време е за къпане", unlocked: true,
+  { id: 5, title: "Седмица 5", subtitle: "Време е за къпане", unlocked: true,
     materials: [
       { id: "m5a", title: "Материал 1", type: "jpg", url: "https://drive.google.com/file/d/17oWI0C8lMH0fP2msYJL5Q_BEC6P78SVm/view" },
       { id: "m5p", title: "Презентация с дейности", type: "pdf", url: "https://drive.google.com/file/d/1B9m2H2IeNTwdv4cIOB0CTzu2ozkjSRPi/view" },
     ],
     videos: [
-      { id: 26, title: "Говор", embedId: "1ZKw2wSPkyMojdPjfkOh9fuJRVjFvKVtJ", type: "drive" },
-      { id: 27, title: "Говор и китара", embedId: "1eeAf_GRTxbwDdYDuX4-bTl2n5XdqXscQ", type: "drive" },
-      { id: 28, title: "Пеене", embedId: "1KkvmUTGM0OPb_trg0nEJpqYd6PKjmLlO", type: "drive" },
-      { id: 29, title: "Пеене с китара", embedId: "144j7F65drYtw-NIvR_FQodneb_FXMylE", type: "drive" },
-      { id: 30, title: "Ритъм 1", embedId: "1nX6GgtsbUNjDjTzDUpYX2xbSxH-DO51X", type: "drive" },
-      { id: 31, title: "Ритъм 2", embedId: "1Ktw_Xw9SpYbBV26czzaAehvMdEQuI9k1", type: "drive" },
+      { id: 26, title: "Говор", embedId: "17_iqeGPokVlpzeDKGfN5wECaQQaZQz4_", type: "drive" },
+      { id: 27, title: "Говор и китара", embedId: "14BGtMtSJFb0IYJPyHCIApHUROOXFnIRm", type: "drive" },
+      { id: 28, title: "Пеене", embedId: "1mDh2gpzz8d15lqoNA5GgyvbiEadZ56BF", type: "drive" },
+      { id: 29, title: "Пеене с китара", embedId: "1VZwDFEy8i-ZcAVMbH6kv_5rHlaVb5pj7", type: "drive" },
+      { id: 30, title: "Ритъм 1", embedId: "1FcUNLiFYxWqhW6lfLopxtFapKAnx7Kfv", type: "drive" },
+      { id: 31, title: "Ритъм 2", embedId: "1GXjCgzyG9AvE43eceRpfqx11RLOB0fqb", type: "drive" },
     ]},
   { id: 6, title: "Седмица 6", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
   { id: 7, title: "Седмица 7", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
@@ -211,6 +211,14 @@ export default function App() {
   const [discussLoading, setDiscussLoading] = useState(false);
   const [posting, setPosting] = useState(false);
   // Admin
+
+  // Chat
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatText, setChatText] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatSending, setChatSending] = useState(false);
+  const chatEndRef = useRef(null);
+  const chatIntervalRef = useRef(null);
   const [adminTab, setAdminTab] = useState("pending");
   const [adminUsers, setAdminUsers] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
@@ -314,6 +322,36 @@ export default function App() {
     finally { setResetLoading(false); }
   };
 
+
+  const loadChat = useCallback(async () => {
+    try {
+      const rows = await sb("chat_messages?select=*&order=created_at.asc&limit=100", { method: "GET" }, token);
+      setChatMessages(rows || []);
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    } catch (_) {}
+  }, [token]);
+
+  const sendChatMessage = async () => {
+    if (!chatText.trim()) return;
+    setChatSending(true);
+    const text = chatText.trim();
+    setChatText("");
+    try {
+      const row = await sb("chat_messages", { method: "POST", body: JSON.stringify({ user_id: session.user.id, author_name: profile.name, author_avatar: profile.avatar_url || null, is_admin: profile.is_admin, text }) }, token);
+      if (row && row[0]) {
+        setChatMessages(prev => [...prev, row[0]]);
+        setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+      }
+    } catch (_) {} finally { setChatSending(false); }
+  };
+
+  const deleteChatMessage = async (id) => {
+    try {
+      await sb(`chat_messages?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token);
+      setChatMessages(prev => prev.filter(m => m.id !== id));
+    } catch (_) {}
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("mk_session");
     setSession(null); setProfile(null); setWatched([]);
@@ -375,6 +413,18 @@ export default function App() {
     if (session && profile?.approved && activeTab === "discuss") loadDiscuss();
   }, [session, profile, activeTab, loadDiscuss]);
 
+  useEffect(() => {
+    if (session && profile?.approved && activeTab === "chat") {
+      loadChat();
+      chatIntervalRef.current = setInterval(loadChat, 5000);
+    } else {
+      clearInterval(chatIntervalRef.current);
+    }
+    return () => clearInterval(chatIntervalRef.current);
+  }, [session, profile, activeTab, loadChat]);
+
+
+
   const postFreeComment = async () => {
     if (!newComment.trim()) return;
     setPosting(true);
@@ -389,7 +439,7 @@ export default function App() {
     if (!newThreadTitle.trim()) return;
     setPosting(true);
     try {
-      const thread = await sb("threads", { method: "POST", body: JSON.stringify({ user_id: session.user.id, author_name: profile.name, is_admin: profile.is_admin, title: newThreadTitle.trim(), body: newThreadBody.trim(), pinned: false }) }, token);
+      const thread = await sb("threads", { method: "POST", body: JSON.stringify({ user_id: session.user.id, author_name: profile.name, author_avatar: profile.avatar_url || null, is_admin: profile.is_admin, title: newThreadTitle.trim(), body: newThreadBody.trim(), pinned: false }) }, token);
       if (thread && thread[0]) setThreads(prev => [thread[0], ...prev]);
       setNewThreadTitle(""); setNewThreadBody("");
     } catch (_) {} finally { setPosting(false); }
@@ -412,14 +462,17 @@ export default function App() {
       else setFreeComments(prev => prev.map(c => c.id === comment.id ? { ...c, pinned: !c.pinned } : c));
     } catch (_) {}
   };
-const deleteThread = async (id) => {
-  if (!window.confirm("Изтрий темата?")) return;
-  try {
-    await sb(`comments?thread_id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token);
-    await sb(`threads?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token);
-    setThreads(prev => prev.filter(t => t.id !== id));
-  } catch (_) {}
-};
+
+
+  const deleteThread = async (id) => {
+    if (!window.confirm("Изтрий темата?")) return;
+    try {
+      await sb("comments?thread_id=eq." + id, { method: "DELETE", prefer: "return=minimal" }, token);
+      await sb("threads?id=eq." + id, { method: "DELETE", prefer: "return=minimal" }, token);
+      setThreads(prev => prev.filter(t => t.id !== id));
+    } catch (_) {}
+  };
+
   const pinThread = async (thread) => {
     try {
       await sb(`threads?id=eq.${thread.id}`, { method: "PATCH", prefer: "return=minimal", body: JSON.stringify({ pinned: !thread.pinned }) }, token);
@@ -703,18 +756,18 @@ const deleteThread = async (id) => {
         </div>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px 16px 40px" }}>
           {AUDIO_LECTURES.map(lec => (
-            <div key={lec.id} style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 20, flexShrink: 0 }}>🎧</div>
-    <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
-  </div>
-  <iframe
-    src={`https://drive.google.com/file/d/${lec.fileId}/preview`}
-    width="100%" height="80"
-    allow="autoplay"
-    style={{ border: "none", borderRadius: 12, background: "#f5f5f5" }}
-  />
-</div>
+            <a key={lec.id} href={`https://drive.google.com/file/d/${lec.fileId}/view`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <div style={{ background: "#fff", borderRadius: 18, padding: "20px 24px", marginBottom: 12, display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", cursor: "pointer", transition: "all 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "#667eea"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}>
+                <div style={{ width: 50, height: 50, borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, flexShrink: 0 }}>🎧</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 15 }}>{lec.title}</div>
+                  <div style={{ fontSize: 12, color: "#7B9E9C", marginTop: 2 }}>Аудио файл — Google Drive</div>
+                </div>
+                <div style={{ color: "#667eea" }}><DownloadIcon /></div>
+              </div>
+            </a>
           ))}
         </div>
       </div>
@@ -749,25 +802,13 @@ const deleteThread = async (id) => {
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84", marginBottom: 10 }}>Материали</div>
               {selectedWeek.materials.map(mat => (
-               <div key={mat.id} className="material-item"
-  style={{ background: "#fff", borderRadius: 14, padding: "14px 18px", marginBottom: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", border: "2px solid #E8F5F4" }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: mat.type === "pdf" ? 12 : 0, cursor: mat.type === "pdf" ? "default" : "pointer" }}
-    onClick={() => mat.type !== "pdf" && window.open(mat.url, "_blank")}>
-    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #FF8B94, #FFB347)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0, fontSize: 18 }}>{mat.type === "pdf" ? "📄" : "🖼️"}</div>
-    <div style={{ flex: 1 }}>
-      <div style={{ fontWeight: 800, color: "#2D5252", fontSize: 14 }}>{mat.title}</div>
-      <div style={{ fontSize: 12, color: "#7B9E9C" }}>{mat.type === "pdf" ? "PDF файл" : "JPG — кликни за отваряне"}</div>
-    </div>
-    {mat.type !== "pdf" && <div style={{ color: "#4ECDC4" }}><DownloadIcon /></div>}
-  </div>
-  {mat.type === "pdf" && (
-    <iframe
-      src={`https://drive.google.com/file/d/${mat.url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1]}/preview`}
-      width="100%" height="500"
-      style={{ border: "none", borderRadius: 10 }}
-    />
-  )}
-</div>
+                <a key={mat.id} href={mat.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+                  <div className="material-item" style={{ background: "#fff", borderRadius: 14, padding: "14px 18px", marginBottom: 8, display: "flex", alignItems: "center", gap: 14, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", border: "2px solid #E8F5F4", cursor: "pointer", transition: "all 0.2s" }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #FF8B94, #FFB347)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0, fontSize: 18 }}>{matIcon(mat.type)}</div>
+                    <div style={{ flex: 1 }}><div style={{ fontWeight: 800, color: "#2D5252", fontSize: 14 }}>{mat.title}</div><div style={{ fontSize: 12, color: "#7B9E9C" }}>{mat.type === "pdf" ? "PDF файл" : "JPG файл"}</div></div>
+                    <div style={{ color: "#4ECDC4" }}><DownloadIcon /></div>
+                  </div>
+                </a>
               ))}
             </div>
           )}
@@ -831,7 +872,7 @@ const deleteThread = async (id) => {
   // ══════════════════════════════════════════════════════════
   // MAIN DASHBOARD
   // ══════════════════════════════════════════════════════════
-  const tabs = [["program", "📚 Програма"], ["discuss", "💬 Дискусии"]];
+  const tabs = [["program", "Програма"], ["discuss", "Дискусии"], ["chat", "Chat"]];
   if (profile?.is_admin) tabs.push(["admin", "🛡️ Админ"]);
   const pendingUsers = adminUsers.filter(u => !u.approved && !u.is_admin);
   const approvedUsers = adminUsers.filter(u => u.approved || u.is_admin);
@@ -1020,26 +1061,25 @@ const deleteThread = async (id) => {
                             <div style={{ fontWeight: 900, fontSize: 16, color: "#2D5252", marginBottom: 4 }}>{thread.title}</div>
                             {thread.body && <div style={{ fontSize: 13, color: "#7B9E9C", lineHeight: 1.5, marginBottom: 8 }}>{thread.body.slice(0, 100)}{thread.body.length > 100 ? "..." : ""}</div>}
                             <div style={{ fontSize: 12, color: "#AAC4C3", display: "flex", alignItems: "center", gap: 8 }}>
-                              <Avatar profile={{ name: thread.author_name, is_admin: thread.is_admin }} size={20} />
+                              <Avatar profile={{ name: thread.author_name, is_admin: thread.is_admin, avatar_url: thread.author_avatar || null }} size={20} />
                               {thread.author_name} · {formatDate(thread.created_at)}
                             </div>
                           </div>
                           {profile?.is_admin && (
-                           <div style={{ display: "flex", gap: 6, marginLeft: 12 }}>
-  <button onClick={(e) => { e.stopPropagation(); pinThread(thread); }}
-    style={{ background: thread.pinned ? "#FFF3CD" : "#EEF8F7", border: "none", borderRadius: 8, padding: "5px 10px", color: thread.pinned ? "#CC8800" : "#4ECDC4", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
-    <PinIcon /> {thread.pinned ? "Откачи" : "Закачи"}
-  </button>
-  {(profile?.is_admin || thread.user_id === session?.user?.id) && (
-    <button onClick={(e) => { e.stopPropagation(); deleteThread(thread.id); }}
-      style={{ background: "#FFE8E8", border: "none", borderRadius: 8, padding: "5px 10px", color: "#CC4444", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
-      <TrashIcon /> Изтрий
-    </button>
-  )}
-</div>
-```
-
-const pinThread = async
+                            <div style={{ display: "flex", gap: 6, marginLeft: 12 }}>
+                              {profile?.is_admin && (
+                                <button onClick={(e) => { e.stopPropagation(); pinThread(thread); }}
+                                  style={{ background: thread.pinned ? "#FFF3CD" : "#EEF8F7", border: "none", borderRadius: 8, padding: "5px 10px", color: thread.pinned ? "#CC8800" : "#4ECDC4", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
+                                  <PinIcon /> {thread.pinned ? "Откачи" : "Закачи"}
+                                </button>
+                              )}
+                              {(profile?.is_admin || thread.user_id === session?.user?.id) && (
+                                <button onClick={(e) => { e.stopPropagation(); deleteThread(thread.id); }}
+                                  style={{ background: "#FFE8E8", border: "none", borderRadius: 8, padding: "5px 10px", color: "#CC4444", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", gap: 4 }}>
+                                  <TrashIcon /> Изтрий
+                                </button>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -1051,13 +1091,73 @@ const pinThread = async
           </div>
         )}
 
-        {/* ── ADMIN ── */}
+
+        {/* CHAT */}
+        {activeTab === "chat" && (
+          <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 320px)", minHeight: 400 }}>
+            <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>Chat</div>
+            <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 16, fontWeight: 600 }}>Общ чат за всички участници</div>
+            {/* Messages */}
+            <div style={{ flex: 1, overflowY: "auto", background: "#fff", borderRadius: 20, padding: "16px", boxShadow: "0 4px 16px rgba(0,0,0,0.06)", marginBottom: 12 }}>
+              {chatLoading && chatMessages.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "40px" }}><Spinner size={40} /></div>
+              ) : chatMessages.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "40px 20px", color: "#AAC4C3" }}>
+                  <div style={{ fontSize: 36, marginBottom: 8 }}>💬</div>
+                  <div style={{ fontWeight: 800 }}>Никой не е написал нищо още</div>
+                  <div style={{ fontSize: 13, marginTop: 4 }}>Бъди първи!</div>
+                </div>
+              ) : (
+                <>
+                  {chatMessages.map(msg => {
+                    const isMe = msg.user_id === session?.user?.id;
+                    return (
+                      <div key={msg.id} style={{ display: "flex", flexDirection: isMe ? "row-reverse" : "row", alignItems: "flex-end", gap: 8, marginBottom: 12 }}>
+                        {!isMe && <Avatar profile={{ name: msg.author_name, is_admin: msg.is_admin, avatar_url: msg.author_avatar }} size={32} />}
+                        <div style={{ maxWidth: "70%" }}>
+                          {!isMe && <div style={{ fontSize: 11, color: "#AAC4C3", fontWeight: 700, marginBottom: 3, paddingLeft: 4 }}>{msg.author_name}{msg.is_admin && <span style={{ background: "#4ECDC4", color: "#fff", fontSize: 9, borderRadius: 20, padding: "1px 6px", marginLeft: 4 }}>Екип</span>}</div>}
+                          <div style={{ background: isMe ? "linear-gradient(135deg, #4ECDC4, #2BB5AC)" : "#F5F9F9", color: isMe ? "#fff" : "#2D5252", borderRadius: isMe ? "18px 18px 4px 18px" : "18px 18px 18px 4px", padding: "10px 14px", fontSize: 14, lineHeight: 1.5, wordBreak: "break-word" }}>
+                            {msg.text}
+                          </div>
+                          <div style={{ fontSize: 10, color: "#BBBBBB", marginTop: 3, textAlign: isMe ? "right" : "left", paddingLeft: isMe ? 0 : 4 }}>
+                            {msg.created_at ? new Date(msg.created_at).toLocaleTimeString("bg-BG", { hour: "2-digit", minute: "2-digit" }) : ""}
+                            {(profile?.is_admin || isMe) && (
+                              <button onClick={() => deleteChatMessage(msg.id)} style={{ background: "none", border: "none", color: "#DDBBBB", fontSize: 10, cursor: "pointer", marginLeft: 6, padding: 0 }}>x</button>
+                            )}
+                          </div>
+                        </div>
+                        {isMe && <Avatar profile={profile} size={32} />}
+                      </div>
+                    );
+                  })}
+                  <div ref={chatEndRef} />
+                </>
+              )}
+            </div>
+            {/* Input */}
+            <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+              <textarea
+                placeholder="Напиши съобщение..."
+                value={chatText}
+                onChange={e => setChatText(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } }}
+                style={{ flex: 1, padding: "12px 16px", border: "2px solid #E0F5F4", borderRadius: 14, fontSize: 14, fontFamily: "Nunito, sans-serif", color: "#2D5252", background: "#F7FFFE", resize: "none", height: 48, outline: "none" }}
+              />
+              <button onClick={sendChatMessage} disabled={chatSending || !chatText.trim()}
+                style={{ background: chatText.trim() ? "linear-gradient(135deg, #4ECDC4, #2BB5AC)" : "#D0ECEB", border: "none", borderRadius: 14, padding: "12px 20px", color: "#fff", fontWeight: 900, fontSize: 14, height: 48, whiteSpace: "nowrap" }}>
+                {chatSending ? <Spinner size={18} color="#fff" /> : "Изпрати"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── ADMIN ── */
         {activeTab === "admin" && profile?.is_admin && (
           <div>
-            <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}> Администраторски панел</div>
+            <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>Администраторски панел</div>
             <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 24, fontWeight: 600 }}>Управление на потребители</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 24, background: "#EEF8F7", borderRadius: 12, padding: 4, width: "fit-content" }}>
-              {[["pending", `Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}`], ["users", "Всички"], ["invite", "Покани"]].map(([key, label]) => (
+              {[["pending", `⏳ Чакащи${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ""}`], ["users", "👥 Всички"], ["invite", "✉️ Покани"]].map(([key, label]) => (
                 <button key={key} onClick={() => setAdminTab(key)} style={{ padding: "8px 18px", border: "none", borderRadius: 10, background: adminTab === key ? "#fff" : "transparent", color: adminTab === key ? "#2D8B84" : "#7B9E9C", fontWeight: 900, fontSize: 13, boxShadow: adminTab === key ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>{label}</button>
               ))}
             </div>
@@ -1066,7 +1166,7 @@ const pinThread = async
               <div style={{ background: "#fff", borderRadius: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", overflow: "hidden" }}>
                 <div style={{ padding: "16px 20px", borderBottom: "2px solid #EEF8F7", fontWeight: 900, fontSize: 16, color: "#2D8B84" }}>Чакащи одобрение</div>
                 {adminLoading ? <div style={{ textAlign: "center", padding: "40px" }}><Spinner size={40} /></div>
-                  : pendingUsers.length === 0 ? <div style={{ textAlign: "center", padding: "40px", color: "#AAC4C3", fontWeight: 700 }}>Няма чакащи потребители </div>
+                  : pendingUsers.length === 0 ? <div style={{ textAlign: "center", padding: "40px", color: "#AAC4C3", fontWeight: 700 }}>Няма чакащи потребители</div>
                   : pendingUsers.map((u, i) => (
                     <div key={u.id} className="admin-row" style={{ padding: "14px 20px", borderBottom: i < pendingUsers.length - 1 ? "1px solid #EEF8F7" : "none", display: "flex", alignItems: "center", gap: 14 }}>
                       <Avatar profile={u} size={42} />
