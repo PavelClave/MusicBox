@@ -1039,7 +1039,6 @@ const deleteThread = async (id) => {
 </div>
 ```
 
-После трябва да добавиш и `deleteThread` функцията. Намери с **Cmd+F**:
 ```
 const pinThread = async
                           )}
