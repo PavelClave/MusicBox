@@ -90,18 +90,14 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 30, title: "Ритъм 1", embedId: "1nX6GgtsbUNjDjTzDUpYX2xbSxH-DO51X", type: "drive" },
       { id: 31, title: "Ритъм 2", embedId: "1Ktw_Xw9SpYbBV26czzaAehvMdEQuI9k1", type: "drive" },
     ]},
-  { id: 6, title: "Седмица 6", subtitle: "На площадката", unlocked: true,
-    materials: [],
-    videos: [
+  { id: 6, title: "Седмица 6", subtitle: "На площадката", unlocked: true, materials: [], videos: [
       { id: 32, title: "Ритъм", embedId: "1C-SMwEzQrWTLkubkEva88aYeJvYHavwb", type: "drive" },
       { id: 33, title: "Говор", embedId: "1JfH1Pfl35mkCAa-HHb6gLJt5z0_kYDZC", type: "drive" },
       { id: 34, title: "Говор с китара", embedId: "1xttH98fokN-sy7kLWJyLu8yNEf3Vvs8I", type: "drive" },
       { id: 35, title: "Пеене", embedId: "1pcuaUSdeO2UIEYhP5fZagr1loIakaQlT", type: "drive" },
       { id: 36, title: "Пеене с китара", embedId: "1BE6iOQLawhlQ49gORB8iAqz-aPhNPruO", type: "drive" },
     ]},
-  { id: 7, title: "Седмица 7", subtitle: "Обличам се", unlocked: true,
-    materials: [],
-    videos: [
+  { id: 7, title: "Седмица 7", subtitle: "Обличам се", unlocked: true, materials: [], videos: [
       { id: 37, title: "Ритъм 1", embedId: "1Iw-2_z60hL-sBYMwZKR3WozPXtMFMwmc", type: "drive" },
       { id: 38, title: "Ритъм 2", embedId: "1CfiUjmOxtvc4lUIGAVxoDNQGbbtEEJMH", type: "drive" },
       { id: 39, title: "Ритъм 2 Вариант", embedId: "16WAqsk_XkjGq38eZCM7PnO5Sk6WqDHJL", type: "drive" },
@@ -110,9 +106,7 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 42, title: "Пеене с китара", embedId: "15hAX-GekvS7v-cipvxpnAaYvCsy66L3B", type: "drive" },
       { id: 43, title: "Пеене с китара 2", embedId: "1G-oGsdTxw_bg2bMCrIGtt65iqKuBzO_X", type: "drive" },
     ]},
-  { id: 8, title: "Седмица 8", subtitle: "Прибирам се", unlocked: true,
-    materials: [],
-    videos: [
+  { id: 8, title: "Седмица 8", subtitle: "Прибирам се", unlocked: true, materials: [], videos: [
       { id: 44, title: "Ритъм 1", embedId: "1ltkgyTXRwP9GR0WxttDnu52JH_Xd1xQF", type: "drive" },
       { id: 45, title: "Ритъм 2", embedId: "1po6-qtCGcY_EaOyUQ_JJjZF-N-8vF_uy", type: "drive" },
       { id: 46, title: "Говор", embedId: "1N3Nrx4-VbBd5cAZ85JyQApbDRr6NxArN", type: "drive" },
@@ -120,9 +114,7 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 48, title: "Пеене", embedId: "1OlwR4WGq7wQ9ib0Y3NZ5PIY7rr_KoVpK", type: "drive" },
       { id: 49, title: "Пеене с китара", embedId: "1UVQ4fY3n4WN-tAGclp3uePZwm1As15cv", type: "drive" },
     ]},
-  { id: 9, title: "Седмица 9", subtitle: "Време за сън", unlocked: true,
-    materials: [],
-    videos: [
+  { id: 9, title: "Седмица 9", subtitle: "Време за сън", unlocked: true, materials: [], videos: [
       { id: 50, title: "Ритъм 1", embedId: "1TY9VpCaq2LnkjHb9o-9NVPDKDjMmsYNV", type: "drive" },
       { id: 51, title: "Ритъм 2", embedId: "1DXYBil_Zqu1iS36_wKJGtlZ-SEDE3oa_", type: "drive" },
       { id: 52, title: "Говор", embedId: "1rWpmBY66RMywysCBsUssUXWsiF1G0kgt", type: "drive" },
@@ -130,9 +122,7 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 54, title: "Пеене", embedId: "1sP5VA3WQ-KBHdFFBpsTczXgOu_3tTAQ1", type: "drive" },
       { id: 55, title: "Пеене с китара", embedId: "1zMeZeY4jyR1T2glgvwGAyZm9hW9b1g3t", type: "drive" },
     ]},
-  { id: 10, title: "Седмица 10", subtitle: "Финал", unlocked: true,
-    materials: [],
-    videos: [
+  { id: 10, title: "Седмица 10", subtitle: "Финал", unlocked: true, materials: [], videos: [
       { id: 56, title: "Ритъм 1", embedId: "14-prib2ZkTcXKmnCo3xfUqO92A-qCuI2", type: "drive" },
       { id: 57, title: "Ритъм 2", embedId: "1YqAZhP6QjfhLzEc9isFdjyh9Dn_wtFvG", type: "drive" },
       { id: 58, title: "Говор", embedId: "1EOKnnVVFWyUBY1-wa_bQLvh0Y2Pshlh7", type: "drive" },
@@ -198,8 +188,7 @@ const css = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   .fade-in { animation: fadeIn 0.4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .drive-wrap { position: relative; width: 100%; aspect-ratio: 16/9; }
-  @media (max-width: 600px) { .drive-wrap { aspect-ratio: unset; height: 220px; } }
+  .drive-wrap { position: relative; width: 100%; height: 100%; }
   .drive-overlay { position: absolute; top: 0; right: 0; width: 60px; height: 60px; z-index: 10; background: #000; cursor: default; }
   .drive-overlay-bottom { position: absolute; bottom: 0; right: 0; width: 100%; height: 44px; z-index: 10; background: transparent; cursor: default; }
 `;
@@ -241,26 +230,6 @@ const DriveVideo = ({ fileId, title }) => (
       allowFullScreen
       style={{ display: "block", width: "100%", height: "100%" }}
     />
-    <div style={{
-      position: "absolute",
-      top: 0,
-      right: 0,
-      width: 90,
-      height: 90,
-      borderRadius: "0 0 0 60%",
-      background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
-      overflow: "hidden",
-      zIndex: 10,
-      cursor: "default",
-      opacity: 1,
-      boxShadow: "0 2px 12px rgba(0,0,0,0.25)"
-    }}>
-      <img
-        src={`data:image/png;base64,${LOGO_B64}`}
-        alt=""
-        style={{ width: "115%", height: "115%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -3 }}
-      />
-    </div>
   </div>
 );
 export default function App() {
