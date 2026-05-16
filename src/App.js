@@ -263,18 +263,7 @@ const DriveVideo = ({ fileId, title }) => (
   </div>
 );
 export default function App() {
-  // Hardware back button support
-  useEffect(() => {
-    const handlePopState = () => {
-      if (selectedVideo) { setSelectedVideo(null); return; }
-      if (selectedWeek) { setSelectedWeek(null); return; }
-      if (showWelcome) { setShowWelcome(false); return; }
-      if (showAudio) { setShowAudio(false); return; }
-      if (selectedThread) { setSelectedThread(null); setThreadComments([]); return; }
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [selectedVideo, selectedWeek, showWelcome, showAudio, selectedThread]);
+
   // ── Auth state ──
   const [authMode, setAuthMode] = useState("login");
   const [session, setSession] = useState(null);
@@ -1060,7 +1049,7 @@ export default function App() {
           )}
           <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84", marginBottom: 10 }}>Видеа</div>
           {selectedWeek.videos.map((video, i) => (
-            <div key={video.id} onClick={() => { setSelectedVideo(video); window.history.pushState({}, ""); }} className="video-item"
+            <div key={video.id} onClick={() => setSelectedVideo(video)} className="video-item"
               style={{ background: "#fff", borderRadius: 18, padding: "18px 20px", marginBottom: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", transition: "all 0.2s" }}>
               <div style={{ width: 50, height: 50, borderRadius: "50%", flexShrink: 0, background: watched.includes(video.id) ? "linear-gradient(135deg, #52C47A, #3DAD64)" : "linear-gradient(135deg, #4ECDC4, #2BB5AC)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 16 }}>
                 {watched.includes(video.id) ? <CheckIcon /> : i + 1}
@@ -1173,14 +1162,14 @@ export default function App() {
         {activeTab === "program" && (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14, marginBottom: 28 }}>
-              <div onClick={() => { setShowWelcome(true); window.history.pushState({}, ""); }} className="week-card"
+              <div onClick={() => setShowWelcome(true)} className="week-card"
                 style={{ background: "linear-gradient(135deg, #FFB347, #FF8B94)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(255,179,71,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Добре дошъл в програмата</div>
                 <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 14 }}>Обща информация и инструкции за всеки ден</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 800 }}><PlayIcon /> Гледай въведението</div>
               </div>
-              <div onClick={() => { setShowAudio(true); window.history.pushState({}, ""); }} className="week-card"
+              <div onClick={() => setShowAudio(true)} className="week-card"
                 style={{ background: "linear-gradient(135deg, #667eea, #764ba2)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(102,126,234,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎧</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Аудио лекции</div>
@@ -1198,7 +1187,7 @@ export default function App() {
                 const wt2 = week.videos.length;
                 const done = wt2 > 0 && ww2 === wt2;
                 return (
-                  <div key={week.id} className="week-card" onClick={() => week.unlocked && (() => { setSelectedWeek(week); window.history.pushState({}, ""); })()}
+                  <div key={week.id} className="week-card" onClick={() => week.unlocked && setSelectedWeek(week)}
                     style={{ background: week.unlocked ? "#fff" : "rgba(255,255,255,0.55)", borderRadius: 20, padding: "20px", cursor: week.unlocked ? "pointer" : "default", boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: done ? "2px solid #52C47A" : week.unlocked ? "2px solid transparent" : "2px solid #E8E8E8", opacity: week.unlocked ? 1 : 0.6, position: "relative" }}>
                     {done && <div style={{ position: "absolute", top: 14, right: 14, background: "#52C47A", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}><CheckIcon /></div>}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
