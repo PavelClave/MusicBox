@@ -230,6 +230,25 @@ const DriveVideo = ({ fileId, title }) => (
       allowFullScreen
       style={{ display: "block", width: "100%", height: "100%" }}
     />
+    <div style={{
+      position: "absolute",
+      top: 0,
+      right: 0,
+      width: 90,
+      height: 90,
+      borderRadius: "0 0 0 60%",
+      background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
+      overflow: "hidden",
+      zIndex: 10,
+      cursor: "default",
+      boxShadow: "0 2px 12px rgba(0,0,0,0.25)"
+    }}>
+      <img
+        src={`data:image/png;base64,${LOGO_B64}`}
+        alt=""
+        style={{ width: "115%", height: "115%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -3 }}
+      />
+    </div>
   </div>
 );
 export default function App() {
