@@ -83,12 +83,12 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: "m5p", title: "Презентация с дейности", type: "pdf", url: "https://drive.google.com/file/d/1B9m2H2IeNTwdv4cIOB0CTzu2ozkjSRPi/view" },
     ],
     videos: [
-      { id: 26, title: "Говор", embedId: "1ZKw2wSPkyMojdPjfkOh9fuJRVjFvKVtJ", type: "drive" },
-      { id: 27, title: "Говор и китара", embedId: "1eeAf_GRTxbwDdYDuX4-bTl2n5XdqXscQ", type: "drive" },
-      { id: 28, title: "Пеене", embedId: "1KkvmUTGM0OPb_trg0nEJpqYd6PKjmLlO", type: "drive" },
-      { id: 29, title: "Пеене с китара", embedId: "144j7F65drYtw-NIvR_FQodneb_FXMylE", type: "drive" },
-      { id: 30, title: "Ритъм 1", embedId: "1nX6GgtsbUNjDjTzDUpYX2xbSxH-DO51X", type: "drive" },
-      { id: 31, title: "Ритъм 2", embedId: "1Ktw_Xw9SpYbBV26czzaAehvMdEQuI9k1", type: "drive" },
+      { id: 26, title: "Говор", embedId: "17_iqeGPokVlpzeDKGfN5wECaQQaZQz4_", type: "drive" },
+      { id: 27, title: "Говор и китара", embedId: "14BGtMtSJFb0IYJPyHCIApHUROOXFnIRm", type: "drive" },
+      { id: 28, title: "Пеене", embedId: "1mDh2gpzz8d15lqoNA5GgyvbiEadZ56BF", type: "drive" },
+      { id: 29, title: "Пеене с китара", embedId: "1VZwDFEy8i-ZcAVMbH6kv_5rHlaVb5pj7", type: "drive" },
+      { id: 30, title: "Ритъм 1", embedId: "1FcUNLiFYxWqhW6lfLopxtFapKAnx7Kfv", type: "drive" },
+      { id: 31, title: "Ритъм 2", embedId: "1GXjCgzyG9AvE43eceRpfqx11RLOB0fqb", type: "drive" },
     ]},
   { id: 6, title: "Седмица 6", subtitle: "На площадката", unlocked: true,
     materials: [],
@@ -110,9 +110,36 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
       { id: 42, title: "Пеене с китара", embedId: "15hAX-GekvS7v-cipvxpnAaYvCsy66L3B", type: "drive" },
       { id: 43, title: "Пеене с китара 2", embedId: "1G-oGsdTxw_bg2bMCrIGtt65iqKuBzO_X", type: "drive" },
     ]},
-  { id: 8, title: "Седмица 8", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
-  { id: 9, title: "Седмица 9", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
-  { id: 10, title: "Седмица 10", subtitle: "Очаквайте скоро", unlocked: false, materials: [], videos: [] },
+  { id: 8, title: "Седмица 8", subtitle: "Прибирам се", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 44, title: "Ритъм 1", embedId: "1ltkgyTXRwP9GR0WxttDnu52JH_Xd1xQF", type: "drive" },
+      { id: 45, title: "Ритъм 2", embedId: "1po6-qtCGcY_EaOyUQ_JJjZF-N-8vF_uy", type: "drive" },
+      { id: 46, title: "Говор", embedId: "1N3Nrx4-VbBd5cAZ85JyQApbDRr6NxArN", type: "drive" },
+      { id: 47, title: "Говор с китара", embedId: "1nIi_YLGvTeD-SuMm0lphokSL2DOrYn2U", type: "drive" },
+      { id: 48, title: "Пеене", embedId: "1OlwR4WGq7wQ9ib0Y3NZ5PIY7rr_KoVpK", type: "drive" },
+      { id: 49, title: "Пеене с китара", embedId: "1UVQ4fY3n4WN-tAGclp3uePZwm1As15cv", type: "drive" },
+    ]},
+  { id: 9, title: "Седмица 9", subtitle: "Време за сън", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 50, title: "Ритъм 1", embedId: "1TY9VpCaq2LnkjHb9o-9NVPDKDjMmsYNV", type: "drive" },
+      { id: 51, title: "Ритъм 2", embedId: "1DXYBil_Zqu1iS36_wKJGtlZ-SEDE3oa_", type: "drive" },
+      { id: 52, title: "Говор", embedId: "1rWpmBY66RMywysCBsUssUXWsiF1G0kgt", type: "drive" },
+      { id: 53, title: "Говор с китара", embedId: "1kQ_CsHTcyVCqO2ba8f0rYQbokpLtdbHQ", type: "drive" },
+      { id: 54, title: "Пеене", embedId: "1sP5VA3WQ-KBHdFFBpsTczXgOu_3tTAQ1", type: "drive" },
+      { id: 55, title: "Пеене с китара", embedId: "1zMeZeY4jyR1T2glgvwGAyZm9hW9b1g3t", type: "drive" },
+    ]},
+  { id: 10, title: "Седмица 10", subtitle: "Финал", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 56, title: "Ритъм 1", embedId: "14-prib2ZkTcXKmnCo3xfUqO92A-qCuI2", type: "drive" },
+      { id: 57, title: "Ритъм 2", embedId: "1YqAZhP6QjfhLzEc9isFdjyh9Dn_wtFvG", type: "drive" },
+      { id: 58, title: "Говор", embedId: "1EOKnnVVFWyUBY1-wa_bQLvh0Y2Pshlh7", type: "drive" },
+      { id: 59, title: "Говор с китара", embedId: "1yg8cg8kPxMQDZnFv7indJDppK55YGkSd", type: "drive" },
+      { id: 60, title: "Пеене", embedId: "1W7YWUNp8lzsvixB6zM6d_sbdsLQg4MOO", type: "drive" },
+      { id: 61, title: "Пеене с китара", embedId: "1gdWhD_D5QHwxG34a5qeXzroWlJnac_Cc", type: "drive" },
+    ]},
 ]}];
 
 // ── API helpers ───────────────────────────────────────────────
@@ -211,7 +238,7 @@ const DriveVideo = ({ fileId, title }) => (
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
-      style={{ display: "block", width: "100%", height: "100%" }}
+      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "block" }}
     />
     <div style={{
       position: "absolute",
@@ -235,7 +262,39 @@ const DriveVideo = ({ fileId, title }) => (
     </div>
   </div>
 );
+      top: 8,
+      right: 8,
+      width: 48,
+      height: 48,
+      borderRadius: "50%",
+      background: "linear-gradient(135deg, #4ECDC4, #FF8B94)",
+      overflow: "hidden",
+      zIndex: 10,
+      cursor: "default",
+      opacity: 0.85,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+    }}>
+      <img
+        src={`data:image/png;base64,${LOGO_B64}`}
+        alt=""
+        style={{ width: "110%", height: "110%", objectFit: "cover", objectPosition: "50% 10%", marginTop: -2 }}
+      />
+    </div>
+  </div>
+);
 export default function App() {
+  // Hardware back button support
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedVideo) { setSelectedVideo(null); return; }
+      if (selectedWeek) { setSelectedWeek(null); return; }
+      if (showWelcome) { setShowWelcome(false); return; }
+      if (showAudio) { setShowAudio(false); return; }
+      if (selectedThread) { setSelectedThread(null); setThreadComments([]); return; }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedVideo, selectedWeek, showWelcome, showAudio, selectedThread]);
   // ── Auth state ──
   const [authMode, setAuthMode] = useState("login");
   const [session, setSession] = useState(null);
@@ -876,7 +935,7 @@ export default function App() {
           <div><div style={{ fontSize: 10, color: "#7BBFBB", fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" }}>Програма за проговаряне</div><div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84" }}>Ритъм, Движение, Говор</div></div>
         </div>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px" }}>
-          <div style={{ background: "#000", borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.15)", marginBottom: 20, aspectRatio: "16/9", position: "relative" }}>
+          <div style={{ background: "#000", borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.15)", marginBottom: 20, position: "relative", width: "100%", paddingBottom: "56.25%", height: 0 }}>
             {selectedVideo.type === "drive"
               ? <DriveVideo fileId={selectedVideo.embedId} title={selectedVideo.title} />
               : <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${selectedVideo.embedId}?rel=0&modestbranding=1`} title={selectedVideo.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ display: "block" }} />
@@ -915,7 +974,7 @@ export default function App() {
           </div>
         </div>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "24px 16px 40px" }}>
-          <div style={{ background: "#000", borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.15)", marginBottom: 20, aspectRatio: "16/9", position: "relative" }}>
+          <div style={{ background: "#000", borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.15)", marginBottom: 20, position: "relative", width: "100%", paddingBottom: "56.25%", height: 0 }}>
             <DriveVideo fileId={WELCOME_SECTION.videoId} title="Добре дошъл" />
           </div>
         </div>
@@ -1021,7 +1080,7 @@ export default function App() {
           )}
           <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84", marginBottom: 10 }}>Видеа</div>
           {selectedWeek.videos.map((video, i) => (
-            <div key={video.id} onClick={() => setSelectedVideo(video)} className="video-item"
+            <div key={video.id} onClick={() => setSelectedVideo(video); window.history.pushState({}, "")} className="video-item"
               style={{ background: "#fff", borderRadius: 18, padding: "18px 20px", marginBottom: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", transition: "all 0.2s" }}>
               <div style={{ width: 50, height: 50, borderRadius: "50%", flexShrink: 0, background: watched.includes(video.id) ? "linear-gradient(135deg, #52C47A, #3DAD64)" : "linear-gradient(135deg, #4ECDC4, #2BB5AC)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 16 }}>
                 {watched.includes(video.id) ? <CheckIcon /> : i + 1}
@@ -1134,14 +1193,14 @@ export default function App() {
         {activeTab === "program" && (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14, marginBottom: 28 }}>
-              <div onClick={() => setShowWelcome(true)} className="week-card"
+              <div onClick={() => setShowWelcome(true); window.history.pushState({}, "")} className="week-card"
                 style={{ background: "linear-gradient(135deg, #FFB347, #FF8B94)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(255,179,71,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Добре дошъл в програмата</div>
                 <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 14 }}>Обща информация и инструкции за всеки ден</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 800 }}><PlayIcon /> Гледай въведението</div>
               </div>
-              <div onClick={() => setShowAudio(true)} className="week-card"
+              <div onClick={() => setShowAudio(true); window.history.pushState({}, "")} className="week-card"
                 style={{ background: "linear-gradient(135deg, #667eea, #764ba2)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(102,126,234,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎧</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Аудио лекции</div>
@@ -1159,7 +1218,7 @@ export default function App() {
                 const wt2 = week.videos.length;
                 const done = wt2 > 0 && ww2 === wt2;
                 return (
-                  <div key={week.id} className="week-card" onClick={() => week.unlocked && setSelectedWeek(week)}
+                  <div key={week.id} className="week-card" onClick={() => week.unlocked && (setSelectedWeek(week), window.history.pushState({}, ""))}
                     style={{ background: week.unlocked ? "#fff" : "rgba(255,255,255,0.55)", borderRadius: 20, padding: "20px", cursor: week.unlocked ? "pointer" : "default", boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: done ? "2px solid #52C47A" : week.unlocked ? "2px solid transparent" : "2px solid #E8E8E8", opacity: week.unlocked ? 1 : 0.6, position: "relative" }}>
                     {done && <div style={{ position: "absolute", top: 14, right: 14, background: "#52C47A", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}><CheckIcon /></div>}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
