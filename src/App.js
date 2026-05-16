@@ -1173,14 +1173,14 @@ export default function App() {
         {activeTab === "program" && (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14, marginBottom: 28 }}>
-              <div onClick={() => setShowWelcome(true); window.history.pushState({}, "")} className="week-card"
+              <div onClick={() => { setShowWelcome(true); window.history.pushState({}, ""); }} className="week-card"
                 style={{ background: "linear-gradient(135deg, #FFB347, #FF8B94)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(255,179,71,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Добре дошъл в програмата</div>
                 <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 14 }}>Обща информация и инструкции за всеки ден</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 800 }}><PlayIcon /> Гледай въведението</div>
               </div>
-              <div onClick={() => setShowAudio(true); window.history.pushState({}, "")} className="week-card"
+              <div onClick={() => { setShowAudio(true); window.history.pushState({}, ""); }} className="week-card"
                 style={{ background: "linear-gradient(135deg, #667eea, #764ba2)", borderRadius: 20, padding: "24px", cursor: "pointer", boxShadow: "0 4px 20px rgba(102,126,234,0.3)", color: "#fff" }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>🎧</div>
                 <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 4 }}>Аудио лекции</div>
