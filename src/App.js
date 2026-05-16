@@ -1060,7 +1060,7 @@ export default function App() {
           )}
           <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84", marginBottom: 10 }}>Видеа</div>
           {selectedWeek.videos.map((video, i) => (
-            <div key={video.id} onClick={() => setSelectedVideo(video); window.history.pushState({}, "")} className="video-item"
+            <div key={video.id} onClick={() => { setSelectedVideo(video); window.history.pushState({}, ""); }} className="video-item"
               style={{ background: "#fff", borderRadius: 18, padding: "18px 20px", marginBottom: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 16, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: "2px solid transparent", transition: "all 0.2s" }}>
               <div style={{ width: 50, height: 50, borderRadius: "50%", flexShrink: 0, background: watched.includes(video.id) ? "linear-gradient(135deg, #52C47A, #3DAD64)" : "linear-gradient(135deg, #4ECDC4, #2BB5AC)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 16 }}>
                 {watched.includes(video.id) ? <CheckIcon /> : i + 1}
@@ -1198,7 +1198,7 @@ export default function App() {
                 const wt2 = week.videos.length;
                 const done = wt2 > 0 && ww2 === wt2;
                 return (
-                  <div key={week.id} className="week-card" onClick={() => week.unlocked && (setSelectedWeek(week), window.history.pushState({}, ""))}
+                  <div key={week.id} className="week-card" onClick={() => week.unlocked && (() => { setSelectedWeek(week); window.history.pushState({}, ""); })()}
                     style={{ background: week.unlocked ? "#fff" : "rgba(255,255,255,0.55)", borderRadius: 20, padding: "20px", cursor: week.unlocked ? "pointer" : "default", boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: done ? "2px solid #52C47A" : week.unlocked ? "2px solid transparent" : "2px solid #E8E8E8", opacity: week.unlocked ? 1 : 0.6, position: "relative" }}>
                     {done && <div style={{ position: "absolute", top: 14, right: 14, background: "#52C47A", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}><CheckIcon /></div>}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
