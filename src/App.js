@@ -146,12 +146,12 @@ const MODULE2 = { id: 2, title: "Животни", weeks: [
   { id: 1, title: "Седмица 1", subtitle: "Животните добри", unlocked: true,
     materials: [],
     videos: [
-      { id: 62, title: "Ритъм 1", embedId: "HSPMyOqSfA0", type: "youtube" },
-      { id: 63, title: "Ритъм 2", embedId: "8EcneQWTPuQ", type: "youtube" },
-      { id: 64, title: "Говор", embedId: "Ub7QVMMZnUU", type: "youtube" },
-      { id: 65, title: "Говор с китара", embedId: "D79oVCFSiWI", type: "youtube" },
-      { id: 66, title: "Пеене", embedId: "1xYUCZQLNXE", type: "youtube" },
-      { id: 67, title: "Пеене с китара", embedId: "3N4VKwFC3lo", type: "youtube" },
+      { id: 62, title: "Ритъм 1", embedId: "1awLJEFh4pGR3t0GzwrAVXVC2HRNiUByo", type: "drive" },
+      { id: 63, title: "Ритъм 2", embedId: "1gKs1v80BoUK5PUINYeDsSQdruqKf4cvl", type: "drive" },
+      { id: 64, title: "Говор", embedId: "1xFUv8Tv1soxYz9x54VgoZP-sgGhSeQhU", type: "drive" },
+      { id: 65, title: "Говор с китара", embedId: "1KlHRSpOtGkuoBK7gT4Tf_XmHk6T_U7ip", type: "drive" },
+      { id: 66, title: "Пеене", embedId: "1ePGlo75FaXkwi2NzC80y578xB00njmjH", type: "drive" },
+      { id: 67, title: "Пеене с китара", embedId: "1vDTKpDgCqvPPSDZNyRuB0K7MyCqMPepq", type: "drive" },
     ]},
 ]};
 
