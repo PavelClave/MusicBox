@@ -132,6 +132,30 @@ const MODULES = [{ id: 1, title: "Ежедневни навици", weeks: [
     ]},
 ]}];
 
+const MODULE2_EMAILS = [
+  "venera.varbanova@gmail.com",
+  "geripeichovska@abv.bg",
+  "ivastamenovaa@gmail.com",
+  "mar4el_tuti@abv.bg",
+  "rostislav.enev@gmail.com",
+  "ddbantova@gmail.com",
+  "didislava@abv.bg",
+];
+
+const MODULE2 = { id: 2, title: "Животни", weeks: [
+  { id: 1, title: "Седмица 1", subtitle: "Животните добри", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 62, title: "Ритъм 1", embedId: "HSPMyOqSfA0", type: "youtube" },
+      { id: 63, title: "Ритъм 2", embedId: "8EcneQWTPuQ", type: "youtube" },
+      { id: 64, title: "Говор", embedId: "Ub7QVMMZnUU", type: "youtube" },
+      { id: 65, title: "Говор с китара", embedId: "D79oVCFSiWI", type: "youtube" },
+      { id: 66, title: "Пеене", embedId: "1xYUCZQLNXE", type: "youtube" },
+      { id: 67, title: "Пеене с китара", embedId: "3N4VKwFC3lo", type: "youtube" },
+    ]},
+]};
+
+
 // ── API helpers ───────────────────────────────────────────────
 const authFetch = async (path, options = {}) => {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/${path}`, {
@@ -251,6 +275,41 @@ const DriveVideo = ({ fileId, title }) => (
     </div>
   </div>
 );
+
+// ── YouTube iframe с воден знак ───────────────────────────────
+const YouTubeVideo = ({ embedId, title }) => (
+  <div className="drive-wrap" style={{ position: "relative", width: "100%", height: "100%" }}>
+    <iframe
+      width="100%" height="100%"
+      src={`https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&showinfo=0`}
+      title={title}
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      style={{ display: "block", width: "100%", height: "100%" }}
+    />
+    <div style={{
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      width: 90,
+      height: 90,
+      borderRadius: "60% 0 0 0",
+      background: "linear-gradient(135deg, #FF8B94, #4ECDC4)",
+      overflow: "hidden",
+      zIndex: 10,
+      cursor: "default",
+      boxShadow: "0 2px 12px rgba(0,0,0,0.25)"
+    }}>
+      <img
+        src={`data:image/png;base64,${LOGO_B64}`}
+        alt=""
+        style={{ width: "115%", height: "115%", objectFit: "cover", objectPosition: "50% 90%", marginBottom: -3 }}
+      />
+    </div>
+  </div>
+);
+
 export default function App() {
   // ── Auth state ──
   const [authMode, setAuthMode] = useState("login");
@@ -318,6 +377,7 @@ export default function App() {
   const avatarRef = useRef(null);
 
   const token = session?.access_token;
+  const hasModule2 = profile ? MODULE2_EMAILS.includes(profile.email?.toLowerCase()) || profile.is_admin : false;
 
   // ── Reset token detection ──
   useEffect(() => {
@@ -895,7 +955,7 @@ export default function App() {
           <div style={{ background: "#000", borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.15)", marginBottom: 20, aspectRatio: "16/9", position: "relative" }}>
             {selectedVideo.type === "drive"
               ? <DriveVideo fileId={selectedVideo.embedId} title={selectedVideo.title} />
-              : <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${selectedVideo.embedId}?rel=0&modestbranding=1`} title={selectedVideo.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ display: "block" }} />
+              : <YouTubeVideo embedId={selectedVideo.embedId} title={selectedVideo.title} />
             }
           </div>
           <div style={{ background: "#fff", borderRadius: 20, padding: "24px", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
@@ -1179,6 +1239,51 @@ export default function App() {
                 );
               })}
             </div>
+            {/* ── MODULE 2 ── */}
+            <div style={{ marginTop: 36, marginBottom: 18 }}>
+              <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 4 }}>Модул 2: Животни</div>
+              <div style={{ fontSize: 14, color: "#7B9E9C", fontWeight: 600 }}>Втори модул на програмата</div>
+            </div>
+            {hasModule2 ? (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+                {MODULE2.weeks.map(week => {
+                  const ww2 = week.videos.filter(v => watched.includes(v.id)).length;
+                  const wt2 = week.videos.length;
+                  const done = wt2 > 0 && ww2 === wt2;
+                  return (
+                    <div key={week.id} className="week-card" onClick={() => week.unlocked && setSelectedWeek(week)}
+                      style={{ background: "#fff", borderRadius: 20, padding: "20px", cursor: "pointer", boxShadow: "0 4px 16px rgba(0,0,0,0.06)", border: done ? "2px solid #52C47A" : "2px solid transparent", position: "relative" }}>
+                      {done && <div style={{ position: "absolute", top: 14, right: 14, background: "#52C47A", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}><CheckIcon /></div>}
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                        <div style={{ width: 50, height: 50, borderRadius: "50%", flexShrink: 0, background: done ? "linear-gradient(135deg, #52C47A, #3DAD64)" : "linear-gradient(135deg, #FF8B94, #FFB347)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 18, boxShadow: "0 4px 12px rgba(255,139,148,0.3)" }}>
+                          {done ? <CheckIcon /> : week.id}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 900, fontSize: 15, color: "#2D5252" }}>{week.title}</div>
+                          <div style={{ fontSize: 13, color: "#FF8B94", fontWeight: 700 }}>{week.subtitle}</div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 12, color: "#7B9E9C", marginBottom: 8, fontWeight: 700 }}>{ww2}/{wt2} видеа</div>
+                      <div style={{ background: "#EEF8F7", borderRadius: 99, height: 7, overflow: "hidden", marginBottom: 10 }}>
+                        <div style={{ height: "100%", width: (wt2>0?(ww2/wt2)*100:0)+"%", background: "linear-gradient(90deg, #FF8B94, #FFB347)", borderRadius: 99 }} />
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#FF8B94", fontSize: 13, fontWeight: 800 }}><PlayIcon /> Отвори седмицата</div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ background: "linear-gradient(135deg, #FF8B94, #FFB347)", borderRadius: 20, padding: "28px 24px", color: "#fff", boxShadow: "0 4px 20px rgba(255,139,148,0.3)" }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>🐾</div>
+                <div style={{ fontWeight: 900, fontSize: 20, marginBottom: 8 }}>Модул 2 — Животни</div>
+                <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 20, lineHeight: 1.6 }}>Продължете пътуването с нови песни и упражнения за животни!</div>
+                <a href="CHECKOUT_LINK" style={{ textDecoration: "none" }}>
+                  <div style={{ background: "#fff", borderRadius: 14, padding: "12px 24px", color: "#FF8B94", fontWeight: 900, fontSize: 15, display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    🔓 Отключи Модул 2
+                  </div>
+                </a>
+              </div>
+            )}
           </>
         )}
 
