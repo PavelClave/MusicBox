@@ -153,6 +153,26 @@ const MODULE2 = { id: 2, title: "Животни", weeks: [
       { id: 66, title: "Пеене", embedId: "1ePGlo75FaXkwi2NzC80y578xB00njmjH", type: "drive" },
       { id: 67, title: "Пеене с китара", embedId: "1vDTKpDgCqvPPSDZNyRuB0K7MyCqMPepq", type: "drive" },
     ]},
+  { id: 2, title: "Седмица 2", subtitle: "На зелената поляна", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 68, title: "Ритъм 1", embedId: "1wKlg7jMC-NA6oNiyq9UpXcIfsocUhMSu", type: "drive" },
+      { id: 69, title: "Ритъм 2", embedId: "19D26Nf9d7VDV0aqHGyv2ekrvAU1w7lKn", type: "drive" },
+      { id: 70, title: "Говор", embedId: "1uV4ChIlZHwvyGGbyg1OEmM5VAqG6vXF_", type: "drive" },
+      { id: 71, title: "Говор с китара", embedId: "1_3_yQ8uIskXY3KFmjVkWKLW8PMtFofZv", type: "drive" },
+      { id: 72, title: "Пеене", embedId: "1P6C3lfGuZR_ixo4IoQLnfee0092Yru6p", type: "drive" },
+      { id: 73, title: "Пеене с китара", embedId: "1qaO7CaN7GrwPw6yKPL5c6yRrd6oTe4EX", type: "drive" },
+    ]},
+  { id: 3, title: "Седмица 3", subtitle: "Голяма кокошка", unlocked: true,
+    materials: [],
+    videos: [
+      { id: 74, title: "Ритъм 1", embedId: "1Eu-8YeuX0OGr9_vNDHeI3gpFvhIS1j7A", type: "drive" },
+      { id: 75, title: "Ритъм 2", embedId: "1l9MR7YWrw7tC_lB3p1yCHsealh3IGo9V", type: "drive" },
+      { id: 76, title: "Говор", embedId: "1GcHCvYok5zFRwhLr2FpZIf6dT03tcUCr", type: "drive" },
+      { id: 77, title: "Говор с китара", embedId: "13so0o-UOqt7YH25vvS__h7W_Ca1OiN2Z", type: "drive" },
+      { id: 78, title: "Пеене", embedId: "1TnbiMk0TUXI1CnN-jJlnDnJ1rWFa0JKy", type: "drive" },
+      { id: 79, title: "Пеене с китара", embedId: "1c1meunvNZfWs9UhfLvsyMW5JbwluPp3N", type: "drive" },
+    ]},
 ]};
 
 
