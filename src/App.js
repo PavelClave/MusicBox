@@ -199,19 +199,29 @@ const sb = async (path, options = {}, token = SUPABASE_ANON_KEY) => {
 
 // ── Icons ─────────────────────────────────────────────────────
 const CONTENT_MODULES = [
-  { key: "module1", label: "Модул 1 — Ежедневни навици" },
-  { key: "module2", label: "Модул 2 — Животни" },
+  { key: "daily-habits", label: "Модул 1 — Ежедневни навици" },
+  { key: "animals", label: "Модул 2 — Животни" },
 ];
 
 const getStoredModuleAccess = (user) => {
-  const raw = user?.module_access && typeof user.module_access === "object" ? user.module_access : {};
+  const raw = user?.modules && typeof user.modules === "object" ? user.modules : {};
+  const legacyRaw = user?.module_access && typeof user.module_access === "object" ? user.module_access : {};
   const email = user?.email?.toLowerCase?.() || "";
 
   // Default: Модул 1 е отключен, Модул 2 е заключен, освен за стария whitelist.
-  // Всяка ръчна промяна от админ панела се записва в profiles.module_access и има приоритет.
+  // Новата ръчна промяна от админ панела се записва в profiles.modules и има приоритет.
+  // Поддържаме и старите ключове module1/module2 като fallback, за да не счупим съществуващи данни.
+  const legacyAccess = {
+    ...(Object.prototype.hasOwnProperty.call(legacyRaw, "module1") ? { "daily-habits": legacyRaw.module1 } : {}),
+    ...(Object.prototype.hasOwnProperty.call(legacyRaw, "module2") ? { animals: legacyRaw.module2 } : {}),
+    ...(Object.prototype.hasOwnProperty.call(raw, "module1") ? { "daily-habits": raw.module1 } : {}),
+    ...(Object.prototype.hasOwnProperty.call(raw, "module2") ? { animals: raw.module2 } : {}),
+  };
+
   return {
-    module1: true,
-    module2: MODULE2_EMAILS.includes(email),
+    "daily-habits": true,
+    animals: MODULE2_EMAILS.includes(email),
+    ...legacyAccess,
     ...raw,
   };
 };
@@ -416,8 +426,8 @@ export default function App() {
 
   const token = session?.access_token;
   const currentAccess = getStoredModuleAccess(profile);
-  const hasModule1 = profile ? profile.is_admin || currentAccess.module1 === true : false;
-  const hasModule2 = profile ? profile.is_admin || currentAccess.module2 === true : false;
+  const hasModule1 = profile ? profile.is_admin || currentAccess["daily-habits"] === true : false;
+  const hasModule2 = profile ? profile.is_admin || currentAccess.animals === true : false;
 
   // ── Reset token detection ──
   useEffect(() => {
@@ -473,7 +483,7 @@ export default function App() {
     try {
       const data = await authFetch("signup", { method: "POST", body: JSON.stringify({ email: email.trim().toLowerCase(), password, data: { name: name.trim() } }) });
       const userId = data.user?.id || data.id;
-      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: userId, email: email.trim().toLowerCase(), name: name.trim(), is_admin: false, approved: false, module_access: { module1: true, module2: false } }) }, SUPABASE_ANON_KEY);
+      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: userId, email: email.trim().toLowerCase(), name: name.trim(), is_admin: false, approved: false, modules: { "daily-habits": true, animals: false } }) }, SUPABASE_ANON_KEY);
       if (data.access_token) {
         localStorage.setItem("mk_session", JSON.stringify(data));
         setSession(data);
@@ -819,9 +829,9 @@ export default function App() {
   const setUserModuleAccess = async (u, moduleKey, enabled) => {
     const nextAccess = { ...getStoredModuleAccess(u), [moduleKey]: enabled };
     try {
-      await sb(`profiles?id=eq.${u.id}`, { method: "PATCH", prefer: "return=minimal", body: JSON.stringify({ module_access: nextAccess }) }, token);
-      setAdminUsers(prev => prev.map(x => x.id === u.id ? { ...x, module_access: nextAccess } : x));
-      if (u.id === profile?.id) setProfile(prev => prev ? { ...prev, module_access: nextAccess } : prev);
+      await sb(`profiles?id=eq.${u.id}`, { method: "PATCH", prefer: "return=minimal", body: JSON.stringify({ modules: nextAccess }) }, token);
+      setAdminUsers(prev => prev.map(x => x.id === u.id ? { ...x, modules: nextAccess } : x));
+      if (u.id === profile?.id) setProfile(prev => prev ? { ...prev, modules: nextAccess } : prev);
     } catch (_) {}
   };
   const inviteUser = async () => {
@@ -831,7 +841,7 @@ export default function App() {
       const res = await fetch(`${SUPABASE_URL}/auth/v1/invite`, { method: "POST", headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ email: addUserEmail.trim().toLowerCase(), data: { name: addUserName.trim() } }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error_description || data.msg || "Грешка");
-      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: data.id, email: addUserEmail.trim().toLowerCase(), name: addUserName.trim(), is_admin: addUserIsAdmin, approved: true, module_access: { module1: true, module2: false } }) }, token);
+      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: data.id, email: addUserEmail.trim().toLowerCase(), name: addUserName.trim(), is_admin: addUserIsAdmin, approved: true, modules: { "daily-habits": true, animals: false } }) }, token);
       setAddUserMsg({ type: "success", text: "Покана изпратена до " + addUserEmail });
       setAddUserEmail(""); setAddUserName(""); setAddUserIsAdmin(false); loadUsers();
     } catch (e) { setAddUserMsg({ type: "error", text: e.message || "Грешка при покана." }); }
