@@ -198,6 +198,24 @@ const sb = async (path, options = {}, token = SUPABASE_ANON_KEY) => {
 };
 
 // ── Icons ─────────────────────────────────────────────────────
+const CONTENT_MODULES = [
+  { key: "module1", label: "Модул 1 — Ежедневни навици" },
+  { key: "module2", label: "Модул 2 — Животни" },
+];
+
+const getStoredModuleAccess = (user) => {
+  const raw = user?.module_access && typeof user.module_access === "object" ? user.module_access : {};
+  const email = user?.email?.toLowerCase?.() || "";
+
+  // Default: Модул 1 е отключен, Модул 2 е заключен, освен за стария whitelist.
+  // Всяка ръчна промяна от админ панела се записва в profiles.module_access и има приоритет.
+  return {
+    module1: true,
+    module2: MODULE2_EMAILS.includes(email),
+    ...raw,
+  };
+};
+
 const LockIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>;
 const PlayIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>;
 const CheckIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
@@ -397,7 +415,9 @@ export default function App() {
   const avatarRef = useRef(null);
 
   const token = session?.access_token;
-  const hasModule2 = profile ? MODULE2_EMAILS.includes(profile.email?.toLowerCase()) || profile.is_admin : false;
+  const currentAccess = getStoredModuleAccess(profile);
+  const hasModule1 = profile ? profile.is_admin || currentAccess.module1 === true : false;
+  const hasModule2 = profile ? profile.is_admin || currentAccess.module2 === true : false;
 
   // ── Reset token detection ──
   useEffect(() => {
@@ -453,7 +473,7 @@ export default function App() {
     try {
       const data = await authFetch("signup", { method: "POST", body: JSON.stringify({ email: email.trim().toLowerCase(), password, data: { name: name.trim() } }) });
       const userId = data.user?.id || data.id;
-      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: userId, email: email.trim().toLowerCase(), name: name.trim(), is_admin: false, approved: false }) }, SUPABASE_ANON_KEY);
+      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: userId, email: email.trim().toLowerCase(), name: name.trim(), is_admin: false, approved: false, module_access: { module1: true, module2: false } }) }, SUPABASE_ANON_KEY);
       if (data.access_token) {
         localStorage.setItem("mk_session", JSON.stringify(data));
         setSession(data);
@@ -795,6 +815,15 @@ export default function App() {
     if (!window.confirm("Изтрий потребителя?")) return;
     try { await sb(`profiles?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" }, token); setAdminUsers(prev => prev.filter(u => u.id !== id)); } catch (_) {}
   };
+
+  const setUserModuleAccess = async (u, moduleKey, enabled) => {
+    const nextAccess = { ...getStoredModuleAccess(u), [moduleKey]: enabled };
+    try {
+      await sb(`profiles?id=eq.${u.id}`, { method: "PATCH", prefer: "return=minimal", body: JSON.stringify({ module_access: nextAccess }) }, token);
+      setAdminUsers(prev => prev.map(x => x.id === u.id ? { ...x, module_access: nextAccess } : x));
+      if (u.id === profile?.id) setProfile(prev => prev ? { ...prev, module_access: nextAccess } : prev);
+    } catch (_) {}
+  };
   const inviteUser = async () => {
     if (!addUserEmail.trim() || !addUserName.trim()) { setAddUserMsg({ type: "error", text: "Имейлът и името са задължителни." }); return; }
     setAddUserLoading(true); setAddUserMsg({ type: "", text: "" });
@@ -802,7 +831,7 @@ export default function App() {
       const res = await fetch(`${SUPABASE_URL}/auth/v1/invite`, { method: "POST", headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ email: addUserEmail.trim().toLowerCase(), data: { name: addUserName.trim() } }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error_description || data.msg || "Грешка");
-      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: data.id, email: addUserEmail.trim().toLowerCase(), name: addUserName.trim(), is_admin: addUserIsAdmin, approved: true }) }, token);
+      await sb("profiles", { method: "POST", prefer: "return=minimal", body: JSON.stringify({ id: data.id, email: addUserEmail.trim().toLowerCase(), name: addUserName.trim(), is_admin: addUserIsAdmin, approved: true, module_access: { module1: true, module2: false } }) }, token);
       setAddUserMsg({ type: "success", text: "Покана изпратена до " + addUserEmail });
       setAddUserEmail(""); setAddUserName(""); setAddUserIsAdmin(false); loadUsers();
     } catch (e) { setAddUserMsg({ type: "error", text: e.message || "Грешка при покана." }); }
@@ -1224,6 +1253,7 @@ export default function App() {
               <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 4 }}>Модул 1: Ежедневни навици</div>
               <div style={{ fontSize: 14, color: "#7B9E9C", fontWeight: 600 }}>Изберете седмица за да започнете</div>
             </div>
+            {hasModule1 ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
               {MODULES[0].weeks.map(week => {
                 const ww2 = week.videos.filter(v => watched.includes(v.id)).length;
@@ -1259,6 +1289,13 @@ export default function App() {
                 );
               })}
             </div>
+            ) : (
+              <div style={{ background: "linear-gradient(135deg, #4ECDC4, #2BB5AC)", borderRadius: 20, padding: "28px 24px", color: "#fff", boxShadow: "0 4px 20px rgba(78,205,196,0.3)", marginBottom: 24 }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>🔒</div>
+                <div style={{ fontWeight: 900, fontSize: 20, marginBottom: 8 }}>Модул 1 — Ежедневни навици</div>
+                <div style={{ fontSize: 14, opacity: 0.9, lineHeight: 1.6 }}>Този модул не е активен за вашия профил.</div>
+              </div>
+            )}
             {/* ── MODULE 2 ── */}
             <div style={{ marginTop: 36, marginBottom: 18 }}>
               <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 4 }}>Модул 2: Животни</div>
@@ -1578,7 +1615,7 @@ export default function App() {
             <div style={{ fontWeight: 900, fontSize: 22, color: "#2D5252", marginBottom: 6 }}>Администраторски панел</div>
             <div style={{ fontSize: 14, color: "#7B9E9C", marginBottom: 24, fontWeight: 600 }}>Управление на потребители</div>
             <div style={{ display: "flex", gap: 4, marginBottom: 24, background: "#EEF8F7", borderRadius: 12, padding: 4, width: "fit-content" }}>
-              {[["pending", "Чакащи" + (pendingUsers.length > 0 ? " (" + pendingUsers.length + ")" : "")], ["users", "Всички"], ["invite", "Покани"]].map(([key, label]) => (
+              {[["pending", "Чакащи" + (pendingUsers.length > 0 ? " (" + pendingUsers.length + ")" : "")], ["users", "Всички"], ["access", "Достъп"], ["invite", "Покани"]].map(([key, label]) => (
                 <button key={key} onClick={() => setAdminTab(key)} style={{ padding: "8px 18px", border: "none", borderRadius: 10, background: adminTab === key ? "#fff" : "transparent", color: adminTab === key ? "#2D8B84" : "#7B9E9C", fontWeight: 900, fontSize: 13, boxShadow: adminTab === key ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>{label}</button>
               ))}
             </div>
@@ -1623,6 +1660,44 @@ export default function App() {
                       )}
                     </div>
                   ))}
+              </div>
+            )}
+            {adminTab === "access" && (
+              <div style={{ background: "#fff", borderRadius: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.06)", overflow: "hidden" }}>
+                <div style={{ padding: "16px 20px", borderBottom: "2px solid #EEF8F7", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div>
+                    <div style={{ fontWeight: 900, fontSize: 16, color: "#2D8B84" }}>Достъп до модули</div>
+                    <div style={{ fontSize: 12, color: "#7B9E9C", fontWeight: 700, marginTop: 4 }}>Включвате/изключвате съдържание за всеки отделен профил.</div>
+                  </div>
+                  <button onClick={loadUsers} style={{ background: "#EEF8F7", border: "none", borderRadius: 10, padding: "6px 14px", color: "#4ECDC4", fontWeight: 800, fontSize: 13 }}>↻ Обнови</button>
+                </div>
+                {adminLoading ? <div style={{ textAlign: "center", padding: "40px" }}><Spinner size={40} /></div>
+                  : approvedUsers.map((u, i) => {
+                    const access = getStoredModuleAccess(u);
+                    return (
+                      <div key={u.id} className="admin-row" style={{ padding: "16px 20px", borderBottom: i < approvedUsers.length - 1 ? "1px solid #EEF8F7" : "none", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                        <Avatar profile={u} size={42} />
+                        <div style={{ flex: "1 1 220px", minWidth: 220 }}>
+                          <div style={{ fontWeight: 800, fontSize: 14, color: "#2D5252", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                            {u.name}
+                            {u.is_admin && <span style={{ background: "#4ECDC4", color: "#fff", fontSize: 10, fontWeight: 800, borderRadius: 20, padding: "1px 8px" }}>Админ</span>}
+                          </div>
+                          <div style={{ fontSize: 12, color: "#7B9E9C", fontWeight: 600 }}>{u.email}</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                          {CONTENT_MODULES.map(m => {
+                            const enabled = u.is_admin || access[m.key] === true;
+                            return (
+                              <button key={m.key} onClick={() => !u.is_admin && setUserModuleAccess(u, m.key, !enabled)} disabled={u.is_admin}
+                                style={{ background: enabled ? "#E8F9EF" : "#FFE8E8", border: enabled ? "2px solid #52C47A" : "2px solid #FFB3B3", borderRadius: 12, padding: "8px 12px", color: enabled ? "#3DAD64" : "#CC4444", fontSize: 12, fontWeight: 900, cursor: u.is_admin ? "default" : "pointer", opacity: u.is_admin ? 0.7 : 1 }}>
+                                {enabled ? "✅" : "🔒"} {m.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             )}
             {adminTab === "invite" && (
